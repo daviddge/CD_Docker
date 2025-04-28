@@ -7,6 +7,7 @@ on:
     paths:
       - src/**
       - pom.xml
+      - publish.yml
   workflow_dispatch:
 
 jobs:
@@ -29,10 +30,7 @@ jobs:
         id: project
 
       - name: Generate Docker image
-        run: | 
-          mvn spring-boot:build-image -DskipTests
-            -Dspring-boot.build-image.imageName=
-              ${{ secrets.DOCKERHUB_USERNAME }}/posts:${{ steps.project.outputs.tag }}
+        run: mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/posts:${{ steps.project.outputs.tag }}
 
       - name: Login to DockerHub
         run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
